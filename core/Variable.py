@@ -1,5 +1,11 @@
+import numpy as np
+
 class Variable:
     def __init__(self, data):
+        if data is not None:
+            if not isinstance(data, np.ndarray):
+                raise TypeError('Object of type {} is not supported'.format(type(data)))
+            
         self.data = data
         self.grad = None
         self.creator = None
@@ -8,6 +14,9 @@ class Variable:
         self.creator = func
 
     def backward(self):
+        if self.grad is None:
+            self.grad = np.ones_like(self.data)
+
         funcs = [self.creator]
         while funcs:
             f = funcs.pop()

@@ -32,5 +32,5 @@ class SquareTest(unittest.TestCase):
         self.assertTrue(flg)
 
 
-
-unittest.main()
+if __name__ == '__main__':
+    unittest.main()

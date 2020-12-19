@@ -34,5 +34,5 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        cd DeZero
+        cd /home/runner/work/DeZero/DeZero
         python -m unittest discover tests

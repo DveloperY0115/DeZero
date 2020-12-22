@@ -1,4 +1,5 @@
 import numpy as np
+import weakref
 from .Variable import Variable
 
 
@@ -13,6 +14,10 @@ def as_array(x):
     return x
 
 
+class Config:
+    enable_backprop = True
+
+
 class Function:
     def __call__(self, *inputs):
         xs = [x.data for x in inputs]
@@ -21,13 +26,16 @@ class Function:
             ys = (ys,)
         outputs = [Variable(as_array(y)) for y in ys]
 
-        self.generation = max([x.generation for x in inputs])
+        if Config.enable_backprop:
+            # function only remembers input & output when it needs to do backward propagation
+            self.generation = max([x.generation for x in inputs])
 
-        for output in outputs:
-            output.set_creator(self)
+            for output in outputs:
+                output.set_creator(self)
 
-        self.inputs = inputs
-        self.outputs = outputs
+            self.inputs = inputs
+            self.outputs = [weakref.ref(output) for output in outputs]
+
         return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, x):

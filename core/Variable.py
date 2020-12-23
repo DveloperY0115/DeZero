@@ -1,5 +1,5 @@
 import numpy as np
-
+import heapq
 
 class Variable:
     def __init__(self, data):
@@ -28,14 +28,16 @@ class Variable:
 
         def add_func(f):
             if f not in seen_set:
-                funcs.append(f)
+                # funcs.append(f)
+                heapq.heappush(funcs, (-f.generation, f))
                 seen_set.add(f)
-                funcs.sort(key=lambda x: x.generation)
+                # TODO: Implement this using priority queue rather than sorting
+                # funcs.sort(key=lambda x: x.generation)
 
         add_func(self.creator)
 
         while funcs:
-            f = funcs.pop()
+            f = heapq.heappop(funcs)[1]
             gys = [output().grad for output in f.outputs]
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):

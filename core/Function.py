@@ -38,6 +38,9 @@ class Function:
 
         return outputs if len(outputs) > 1 else outputs[0]
 
+    def __lt__(self, other):
+        return self.generation < other.generation
+
     def forward(self, x):
         raise NotImplementedError()
 
@@ -74,15 +77,15 @@ class Exp(Function):
         return gx
 
 
-
-""" Function wrappers """
 def add(x0, x1):
     f = Add()
     return f(x0, x1)
 
+
 def square(x):
     f = Square()
     return f(x)
+
 
 def exp(x):
     f = Exp()

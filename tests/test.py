@@ -1,21 +1,10 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
-import unittest
 import numpy as np
-from core.Variable import Variable
-from core.Function import add, square, exp
-from core.Diff import numerical_diff
+import core.core as core
 
+x = core.Variable(np.array(2.0))
+y = core.Variable(np.array(3.0))
 
-x = Variable(np.array(2.0))
-y = Variable(np.array(3.0))
-
-print(x)
-print(y)
-
-z = add(square(x), square(y))
+z = x * y
 
 print(z)
 

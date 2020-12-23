@@ -1,14 +1,17 @@
 import numpy as np
-import core.core as core
+from core.core import *
 
-x = core.Variable(np.array(2.0))
-y = core.Variable(np.array(3.0))
+x = Variable(np.array(2.0))
 
-z = x * y
+# y = x + np.array(3.0)
+y = np.array([3.0]) + x
 
+z = x + 3.0
+z1 = 3.0 + x
+
+print(y)
 print(z)
-
-z.backward()
+print(z1)
 
 """
 x = Variable(np.array(2.0))

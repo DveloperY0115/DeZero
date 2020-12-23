@@ -10,6 +10,9 @@ Implementation of Variable class
 
 
 class Variable:
+
+    __array_priority__ = 200    # to prevent calling magic method defined by numpy
+
     def __init__(self, data, name=None):
         if data is not None:
             if not isinstance(data, np.ndarray):
@@ -32,6 +35,15 @@ class Variable:
 
     def __mul__(self, other):
         return mul(self, other)
+
+    def __rmul__(self, other):
+        return mul(self, other)
+
+    def __add__(self, other):
+        return add(self, other)
+
+    def __radd__(self, other):
+        return add(self, other)
 
     @property
     def shape(self):
@@ -111,6 +123,19 @@ def as_array(x):
     return x
 
 
+def as_variable(x):
+    """
+    Checks the type of input and convert it to numpy array
+    :param x: Any
+    :return: Instance of Variable created using 'x'
+    """
+    if not isinstance(x, Variable):
+        if not isinstance(x, np.ndarray):
+            return Variable(as_array(x))
+        return Variable(x)
+    return x
+
+
 class Config:
     enable_backprop = True
 
@@ -133,6 +158,8 @@ def no_grad():
 
 class Function:
     def __call__(self, *inputs):
+        inputs = [as_variable(x) for x in inputs]
+
         xs = [x.data for x in inputs]
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):

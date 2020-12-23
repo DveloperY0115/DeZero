@@ -1,16 +1,43 @@
 import numpy as np
 import heapq
 
+
 class Variable:
-    def __init__(self, data):
+    def __init__(self, data, name=None):
         if data is not None:
             if not isinstance(data, np.ndarray):
                 raise TypeError('Object of type {} is not supported'.format(type(data)))
             
         self.data = data
+        self.name = name
         self.grad = None
         self.creator = None
         self.generation = 0
+
+    def __repr__(self):
+        if self.data is None:
+            return 'variable(None)'
+        p = str(self.data).replace('\n', '\n' + ' ' * 9)
+        return 'variable(' + p + ')'
+
+    def __len__(self):
+        return len(self.data)
+
+    @property
+    def shape(self):
+        return self.data.shape
+
+    @property
+    def ndim(self):
+        return self.data.ndim
+
+    @property
+    def size(self):
+        return self.data.size
+
+    @property
+    def dtype(self):
+        return self.data.dtype
 
     def set_creator(self, func):
         self.creator = func

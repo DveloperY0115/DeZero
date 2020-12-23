@@ -3,8 +3,8 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 import numpy as np
-from core.Variable import Variable
-from core.Function import square
+from DeZero.Variable import Variable
+from DeZero.Function import square
 
 
 def stupid_squares():

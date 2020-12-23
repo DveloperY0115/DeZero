@@ -4,8 +4,8 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 import unittest
 import numpy as np
-from core.core import *
-from core.Diff import numerical_diff
+from DeZero.core import *
+from DeZero.Diff import numerical_diff
 
 class AddTest(unittest.TestCase):
     def test_forward(self):

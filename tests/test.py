@@ -1,5 +1,5 @@
 import numpy as np
-from core.core import *
+from DeZero.core import *
 
 x = Variable(np.array(2.0))
 

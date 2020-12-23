@@ -33,17 +33,35 @@ class Variable:
     def __len__(self):
         return len(self.data)
 
-    def __mul__(self, other):
-        return mul(self, other)
+    def __neg__(self):
+        return neg(self)
 
-    def __rmul__(self, other):
-        return mul(self, other)
+    def __pow__(self, power, modulo=None):
+        return pow(self, power)
 
     def __add__(self, other):
         return add(self, other)
 
     def __radd__(self, other):
         return add(self, other)
+
+    def __sub__(self, other):
+        return sub(self, other)
+
+    def __rsub__(self, other):
+        return sub(other, self)
+
+    def __mul__(self, other):
+        return mul(self, other)
+
+    def __rmul__(self, other):
+        return mul(self, other)
+
+    def __truediv__(self, other):
+        return div(self, other)
+
+    def __rtruediv__(self, other):
+        return div(other, self)
 
     @property
     def shape(self):
@@ -188,23 +206,12 @@ class Function:
         raise NotImplementedError()
 
 
-class Add(Function):
-    def forward(self, x0, x1):
-        y = x0 + x1
-        return y
+class Neg(Function):
+    def forward(self, x):
+        return -x
 
     def backward(self, gy):
-        return gy, gy
-
-
-class Mul(Function):
-    def forward(self, x0, x1):
-        y = x0 * x1
-        return y
-
-    def backward(self, gy):
-        x0, x1 = self.inputs[0].data, self.inputs[1].data
-        return gy * x1, gy * x0
+        return -gy
 
 
 class Square(Function):
@@ -214,6 +221,21 @@ class Square(Function):
     def backward(self, gy):
         x = self.inputs[0].data
         gx = 2 * x * gy
+        return gx
+
+
+class Pow(Function):
+    def __init__(self, c):
+        self.c = c
+
+    def forward(self, x):
+        y = x ** self.c
+        return y
+
+    def backward(self, gy):
+        x = self.inputs[0].data
+        c = self.c
+        gx = c * x ** (c - 1) * gy
         return gx
 
 
@@ -227,8 +249,73 @@ class Exp(Function):
         return gx
 
 
+class Add(Function):
+    def forward(self, x0, x1):
+        y = x0 + x1
+        return y
+
+    def backward(self, gy):
+        return gy, gy
+
+
+class Sub(Function):
+    def forward(self, x0, x1):
+        y = x0 - x1
+        return y
+
+    def backward(self, gy):
+        return gy, -gy
+
+
+class Mul(Function):
+    def forward(self, x0, x1):
+        y = x0 * x1
+        return y
+
+    def backward(self, gy):
+        x0, x1 = self.inputs[0].data, self.inputs[1].data
+        return gy * x1, gy * x0
+
+
+class Div(Function):
+    def forward(self, x0, x1):
+        y = x0 / x1
+        return y
+
+    def backward(self, gy):
+        x0, x1 = self.inputs[0].data, self.inputs[1].data
+        gx0 = gy / x1
+        gx1 = gy * (-x0 / x1 ** 2)
+        return gx0, gx1
+
+
+def neg(x):
+    f = Neg()
+    return f(x)
+
+
+def square(x):
+    f = Square()
+    return f(x)
+
+
+def pow(x, c):
+    f = Pow(c)
+    return f(x)
+
+
+def exp(x):
+    f = Exp()
+    return f(x)
+
+
 def add(x0, x1):
     f = Add()
+    return f(x0, x1)
+
+
+def sub(x0, x1):
+    f = Sub()
     return f(x0, x1)
 
 
@@ -237,11 +324,6 @@ def mul(x0, x1):
     return f(x0, x1)
 
 
-def square(x):
-    f = Square()
-    return f(x)
-
-
-def exp(x):
-    f = Exp()
-    return f(x)
+def div(x0, x1):
+    f = Div()
+    return f(x0, x1)

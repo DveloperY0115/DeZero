@@ -4,8 +4,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 import unittest
 import numpy as np
-from core.Variable import Variable
-from core.Function import add, square, exp
+from core.core import *
 from core.Diff import numerical_diff
 
 class AddTest(unittest.TestCase):

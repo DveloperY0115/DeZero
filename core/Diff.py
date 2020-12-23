@@ -1,6 +1,5 @@
-from .Variable import Variable
-from .Function import Function
-
+from core.core import Variable
+from core.core import Function
 
 def numerical_diff(f, x, eps=1e-4):
     """

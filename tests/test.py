@@ -3,15 +3,20 @@ from core.core import *
 
 x = Variable(np.array(2.0))
 
-# y = x + np.array(3.0)
-y = np.array([3.0]) + x
+print(x ** 3)
 
-z = x + 3.0
-z1 = 3.0 + x
+y1 = 2.0 - x    # 0.0
+y2 = x - 1.0    # 1.0
+print(y1)
+print(y2)
 
-print(y)
-print(z)
-print(z1)
+y1.backward()
+print(x.grad)
+
+x.cleargrad()
+
+y2.backward()
+print(x.grad)
 
 """
 x = Variable(np.array(2.0))
